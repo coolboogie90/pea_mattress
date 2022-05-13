@@ -33,12 +33,14 @@ def draw_gameover():
 def reset():
     # game status & initialization
     global endgame
-    global hero, hero_speed
+    global hero, hero_speed, hero_lives
     global next_box_time, boxes
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
     global BOX_APPARTION
 
+    # game status
     endgame = False
+    hero_lives = 3
 
     hero = Actor("hero", anchor=('middle', 'bottom'))
     hero.pos = (64, GROUND)
@@ -64,6 +66,8 @@ def reset():
         bg_t.pos = n * WIDTH, 0
         backgrounds_top.append(bg_t)
 
+
+
 def draw():
     global endgame
     
@@ -86,17 +90,20 @@ def draw_game():
 
     hero.draw()
 
+    screen.draw.text(f"LIVES    {hero_lives}", [600,20], color="pink",fontsize=60)
+
 def update(dt):
-    if endgame == True:
+    if endgame:
         draw_gameover()
     else:
         update_game(dt)
 
 def update_game(dt):
+    global endgame
     screen.clear()
     # enemies update
     # box
-    global next_box_time
+    global next_box_time, game_over, hero_lives
 
     next_box_time -= dt
     if next_box_time <= 0:
@@ -104,14 +111,20 @@ def update_game(dt):
         box.pos = WIDTH, GROUND
         boxes.append(box)
         next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
-
+    
+    
     for box in boxes:
         x, y = box.pos
         x -= GAME_SPEED * dt
         box.pos = x, y
         if box.colliderect(hero):
-            screen.clear()
-            draw_gameover()
+            boxes.pop(0)
+            hero_lives -= 1
+
+    if hero_lives == 0:
+        endgame = True
+        screen.clear()
+        draw_gameover()
 
     if boxes:
         if boxes[0].pos[0] <= - 32:

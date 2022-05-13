@@ -17,7 +17,7 @@ JUMP_SPEED = 200
 
 # hero initialisation
 
-hero = Actor("hero", anchor=('middle', 'bottom'))
+hero = Actor("princess", anchor=('middle', 'bottom'))
 hero.pos = (64, GROUND)
 hero_speed = 0
 

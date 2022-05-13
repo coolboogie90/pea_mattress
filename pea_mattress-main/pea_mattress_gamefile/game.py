@@ -21,6 +21,8 @@ hero = Actor("hero", anchor=('middle', 'bottom'))
 hero.pos = (64, GROUND)
 hero_speed = 0
 
+gameover_bg = Actor("gameover_bg", anchor=('left', 'top'))
+
 # enemies initialisations
 
 BOX_APPARTION = (2, 5)
@@ -41,27 +43,34 @@ for n in range(NUMBER_OF_BACKGROUND):
     bg_t.pos = n * WIDTH, 0
     backgrounds_top.append(bg_t)
 
+# lives counter
+
+hero_lives = 3
+
+# gameover status
+
+game_over = False
 
 def draw():
     screen.clear()
 
+if game_over:
+    screen.draw("gameover_bg")
+else:
     for bg in backgrounds_bottom:
         bg.draw()
-
     for bg in backgrounds_top:
         bg.draw()
-
     for box in boxes:
         box.draw()
 
     hero.draw()
 
-
 def update(dt):
 
     # enemies update
     # box
-    global next_box_time
+    global next_box_time, game_over, hero_lives
 
     next_box_time -= dt
     if next_box_time <= 0:
@@ -75,7 +84,10 @@ def update(dt):
         x -= GAME_SPEED * dt
         box.pos = x, y
         if box.colliderect(hero):
-            exit()
+            hero_lives -= 1
+
+        if hero_lives == 0:
+            game_over = True
 
     if boxes:
         if boxes[0].pos[0] <= - 32:

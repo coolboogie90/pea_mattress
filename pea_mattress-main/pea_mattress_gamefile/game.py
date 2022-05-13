@@ -19,6 +19,8 @@ JUMP_SPEED = 200
 # splash and game over screens
 game_over = Actor("gameover_bg")
 
+
+
 def draw_gameover():
     global endgame
     print("gameover!")
@@ -33,13 +35,14 @@ def draw_gameover():
 def reset():
     # game status & initialization
     global endgame
-    global hero, hero_speed, hero_lives
+    global hero, hero_speed, hero_lives, life
     global next_box_time, boxes
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
     global BOX_APPARTION
 
     # game status
     endgame = False
+    life = Actor("life32", anchor=(534, 540))
     hero_lives = 3
 
     hero = Actor("hero", anchor=('middle', 'bottom'))
@@ -89,7 +92,7 @@ def draw_game():
         box.draw()
 
     hero.draw()
-
+    life.draw())
     screen.draw.text(f"LIVES    {hero_lives}", [600,20], color="pink",fontsize=60)
 
 def update(dt):

@@ -111,6 +111,7 @@ def draw_game():
 
     if on_pause:
         screen.draw.text(f"PAUSE",[250,200], color="pink",fontsize=120)
+
 def update(dt):
     if not on_pause:
         if endgame:
@@ -124,6 +125,42 @@ def update_game(dt):
     # enemies update
     # box
     global next_box_time, game_over, hero_lives
+
+    # hero update
+
+    global hero_speed
+
+    hero_speed -= GRAVITY * dt
+    x, y = hero.pos
+    y -= hero_speed * dt
+
+    if y > GROUND:
+        y = GROUND
+        hero_speed = 0
+
+    hero.pos = x, y
+
+    # bg update
+
+    for bg in backgrounds_bottom:
+        x, y = bg.pos
+        x -= GAME_SPEED * dt
+        bg.pos = x, y
+
+    if backgrounds_bottom[0].pos[0] <= - WIDTH:
+        bg = backgrounds_bottom.pop(0)
+        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
+        backgrounds_bottom.append(bg)
+
+    for bg in backgrounds_top:
+        x, y = bg.pos
+        x -= GAME_SPEED/3 * dt
+        bg.pos = x, y
+
+    if backgrounds_top[0].pos[0] <= - WIDTH:
+        bg = backgrounds_top.pop(0)
+        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
+        backgrounds_top.append(bg)
 
     next_box_time -= dt
     if next_box_time <= 0:

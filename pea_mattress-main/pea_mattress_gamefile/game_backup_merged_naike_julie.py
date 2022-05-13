@@ -3,7 +3,7 @@
 from argparse import Action
 from random import randint
 from tkinter import ANCHOR
-import math
+
 
 WIDTH = 800
 HEIGHT = 600
@@ -17,7 +17,7 @@ JUMP_SPEED = 200
 
 # hero initialisation
 
-hero = Actor("princess", anchor=('middle', 'bottom'))
+hero = Actor("hero", anchor=('middle', 'bottom'))
 hero.pos = (64, GROUND)
 hero_speed = 0
 
@@ -26,10 +26,6 @@ hero_speed = 0
 BOX_APPARTION = (2, 5)
 next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
 boxes = []
-
-ENEMY_APPARTION = (1, 3)
-next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
-enemies = []
 
 # background inititalisation
 
@@ -57,9 +53,6 @@ def draw():
 
     for box in boxes:
         box.draw()
-    
-    for enemy in enemies:
-        enemy.draw()
 
     hero.draw()
 
@@ -87,30 +80,6 @@ def update(dt):
     if boxes:
         if boxes[0].pos[0] <= - 32:
             boxes.pop(0)
-
-    global next_enemy_time
-
-    next_enemy_time -= dt
-    if next_enemy_time <= 0:
-        enemy = Actor("enemy", anchor=('left', 'bottom'))
-        enemy.pos = WIDTH, GROUND
-        enemies.append(enemy)
-        next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
-    
-    
-    for enemy in enemies:
-        x, y = enemy.pos
-        x -= GAME_SPEED * dt
-        y = math.sin(x/50.0) * 100 + 200        # scale sine wave
-        y = int(y)                              # needs to be int
-        enemy.pos = x, y
-
-        if enemy.colliderect(hero):
-            exit()
-
-    if enemies:
-        if enemies[0].pos[0] <= - 80:
-            enemies.pop(0)
 
     # hero update
 

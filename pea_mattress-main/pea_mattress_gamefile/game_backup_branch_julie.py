@@ -5,7 +5,6 @@ from random import randint
 from tkinter import ANCHOR
 import pgzrun
 
-import math
 
 WIDTH = 800
 HEIGHT = 600
@@ -19,14 +18,10 @@ JUMP_SPEED = 200
 
 # splash and game over screens
 game_over = Actor("gameover_bg")
-life = Actor("life32", anchor=('center', 'center'))
-life.pos = (595, 35)
-
-
 
 def draw_gameover():
     global endgame
-    #print("gameover!")
+    print("gameover!")
     endgame = True
     game_over.draw()
     screen.draw.text(str("You lost!"), bottom = HEIGHT -500 , left = WIDTH / 2, fontname = "blueberry")
@@ -34,32 +29,22 @@ def draw_gameover():
 
 # hero initialisation
 
-hero = Actor("princess", anchor=('middle', 'bottom'))
-hero.pos = (64, GROUND)
-hero_speed = 0
 # okay everything is sound and functional inside of the reset
 def reset():
     # game status & initialization
     global endgame
-    global hero, hero_speed, hero_lives, life, next_enemy_time
-    global next_box_time, boxes, enemies
+    global hero, hero_speed
+    global next_box_time, boxes
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
-    global BOX_APPARTION, ENEMY_APPARTION
+    global BOX_APPARTION
 
-    # game status
     endgame = False
-    hero_lives = 3
 
-    hero = Actor("princess", anchor=('middle', 'bottom'))
+    hero = Actor("hero", anchor=('middle', 'bottom'))
     hero.pos = (64, GROUND)
     hero_speed = 0
 
     # enemies initialisations
-    ENEMY_APPARTION = (1, 3)
-    next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
-    enemies = []
-
-# background inititalisation
 
     BOX_APPARTION = (2, 5)
     next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
@@ -78,8 +63,6 @@ def reset():
         bg_t = Actor("background1_peamattress", anchor=('left', 'top'))
         bg_t.pos = n * WIDTH, 0
         backgrounds_top.append(bg_t)
-
-
 
 def draw():
     global endgame
@@ -100,26 +83,20 @@ def draw_game():
 
     for box in boxes:
         box.draw()
-    
-    for enemy in enemies:
-        enemy.draw()
 
     hero.draw()
-    life.draw()
-    screen.draw.text(f"LIVES  {hero_lives}", [630,20], color="pink",fontsize=50)
 
 def update(dt):
-    if endgame:
+    if endgame == True:
         draw_gameover()
     else:
         update_game(dt)
 
 def update_game(dt):
-    global endgame
     screen.clear()
     # enemies update
     # box
-    global next_box_time, game_over, hero_lives
+    global next_box_time
 
     next_box_time -= dt
     if next_box_time <= 0:
@@ -127,48 +104,18 @@ def update_game(dt):
         box.pos = WIDTH, GROUND
         boxes.append(box)
         next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
-    
-    
+
     for box in boxes:
         x, y = box.pos
         x -= GAME_SPEED * dt
         box.pos = x, y
         if box.colliderect(hero):
-            boxes.pop(0)
-            hero_lives -= 1
-
-    if hero_lives == 0:
-        endgame = True
-        screen.clear()
-        draw_gameover()
+            screen.clear()
+            draw_gameover()
 
     if boxes:
         if boxes[0].pos[0] <= - 32:
             boxes.pop(0)
-
-    global next_enemy_time
-
-    next_enemy_time -= dt
-    if next_enemy_time <= 0:
-        enemy = Actor("pea_enemy", anchor=('left', 'bottom'))
-        enemy.pos = WIDTH, GROUND
-        enemies.append(enemy)
-        next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
-    
-    
-    for enemy in enemies:
-        x, y = enemy.pos
-        x -= GAME_SPEED * dt
-        y = math.sin(x/50.0) * 100 + 200        # scale sine wave
-        y = int(y)                              # needs to be int
-        enemy.pos = x, y
-
-        if enemy.colliderect(hero):
-            exit()
-
-    if enemies:
-        if enemies[0].pos[0] <= - 80:
-            enemies.pop(0)
 
     # hero update
 
@@ -215,8 +162,9 @@ def on_key_down(key):
 
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
-    
-    if key == keys.R and endgame == True:
+
+def on_key_down(key):
+    if key == keys.R:
         reset()
 
 reset()

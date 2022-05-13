@@ -92,7 +92,7 @@ def update(dt):
 
     next_enemy_time -= dt
     if next_enemy_time <= 0:
-        enemy = Actor("enemy", anchor=('left', 'bottom'))
+        enemy = Actor("pea_enemy", anchor=('left', 'bottom'))
         enemy.pos = WIDTH, GROUND
         enemies.append(enemy)
         next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])

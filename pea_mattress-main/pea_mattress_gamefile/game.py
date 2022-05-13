@@ -54,17 +54,19 @@ game_over = False
 def draw():
     screen.clear()
 
-if game_over:
-    screen.draw("gameover_bg")
-else:
-    for bg in backgrounds_bottom:
-        bg.draw()
-    for bg in backgrounds_top:
-        bg.draw()
-    for box in boxes:
-        box.draw()
+    if game_over:
+        gameover_bg.draw()
+        screen.draw.text(f"YOU LOST", [200,100], color="pink",fontname = "", fontsize=120)
+    else:
+        for bg in backgrounds_bottom:
+            bg.draw()
+        for bg in backgrounds_top:
+            bg.draw()
+        for box in boxes:
+            box.draw()
+        hero.draw()
+        screen.draw.text(f"LIVES    {hero_lives}", [600,20], color="pink",fontsize=60)
 
-    hero.draw()
 
 def update(dt):
 
@@ -78,16 +80,18 @@ def update(dt):
         box.pos = WIDTH, GROUND
         boxes.append(box)
         next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
-
+    
+    
     for box in boxes:
         x, y = box.pos
         x -= GAME_SPEED * dt
         box.pos = x, y
         if box.colliderect(hero):
+            boxes.pop(0)
             hero_lives -= 1
 
-        if hero_lives == 0:
-            game_over = True
+    if hero_lives == 0:
+        game_over = True
 
     if boxes:
         if boxes[0].pos[0] <= - 32:

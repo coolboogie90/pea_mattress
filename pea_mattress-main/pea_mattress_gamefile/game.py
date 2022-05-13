@@ -15,6 +15,8 @@ NUMBER_OF_BACKGROUND = 2
 GAME_SPEED = 100
 JUMP_SPEED = 200
 
+on_pause = False
+
 # hero initialisation
 
 hero = Actor("princess", anchor=('middle', 'bottom'))
@@ -56,73 +58,85 @@ def draw():
 
     hero.draw()
 
+    if on_pause:
+        screen.draw.text(f"PAUSE",[250,200], color="pink",fontsize=120)
+
+
+
+
 
 def update(dt):
 
-    # enemies update
-    # box
-    global next_box_time
+    if not on_pause:
 
-    next_box_time -= dt
-    if next_box_time <= 0:
-        box = Actor("box", anchor=('left', 'bottom'))
-        box.pos = WIDTH, GROUND
-        boxes.append(box)
-        next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
+        # enemies update
+        # box
+        global next_box_time
 
-    for box in boxes:
-        x, y = box.pos
-        x -= GAME_SPEED * dt
-        box.pos = x, y
-        if box.colliderect(hero):
-            exit()
+        next_box_time -= dt
+        if next_box_time <= 0:
+            box = Actor("box", anchor=('left', 'bottom'))
+            box.pos = WIDTH, GROUND
+            boxes.append(box)
+            next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
 
-    if boxes:
-        if boxes[0].pos[0] <= - 32:
-            boxes.pop(0)
+        for box in boxes:
+            x, y = box.pos
+            x -= GAME_SPEED * dt
+            box.pos = x, y
+            if box.colliderect(hero):
+                exit()
 
-    # hero update
+        if boxes:
+            if boxes[0].pos[0] <= - 32:
+                boxes.pop(0)
 
-    global hero_speed
+        # hero update
 
-    hero_speed -= GRAVITY * dt
-    x, y = hero.pos
-    y -= hero_speed * dt
+        global hero_speed
 
-    if y > GROUND:
-        y = GROUND
-        hero_speed = 0
+        hero_speed -= GRAVITY * dt
+        x, y = hero.pos
+        y -= hero_speed * dt
 
-    hero.pos = x, y
+        if y > GROUND:
+            y = GROUND
+            hero_speed = 0
 
-    # bg update
+        hero.pos = x, y
 
-    for bg in backgrounds_bottom:
-        x, y = bg.pos
-        x -= GAME_SPEED * dt
-        bg.pos = x, y
+        # bg update
 
-    if backgrounds_bottom[0].pos[0] <= - WIDTH:
-        bg = backgrounds_bottom.pop(0)
-        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
-        backgrounds_bottom.append(bg)
+        for bg in backgrounds_bottom:
+            x, y = bg.pos
+            x -= GAME_SPEED * dt
+            bg.pos = x, y
 
-    for bg in backgrounds_top:
-        x, y = bg.pos
-        x -= GAME_SPEED/3 * dt
-        bg.pos = x, y
+        if backgrounds_bottom[0].pos[0] <= - WIDTH:
+            bg = backgrounds_bottom.pop(0)
+            bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
+            backgrounds_bottom.append(bg)
 
-    if backgrounds_top[0].pos[0] <= - WIDTH:
-        bg = backgrounds_top.pop(0)
-        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
-        backgrounds_top.append(bg)
+        for bg in backgrounds_top:
+            x, y = bg.pos
+            x -= GAME_SPEED/3 * dt
+            bg.pos = x, y
+
+        if backgrounds_top[0].pos[0] <= - WIDTH:
+            bg = backgrounds_top.pop(0)
+            bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
+            backgrounds_top.append(bg)
 
 
 def on_key_down(key):
-    global hero_speed
+    global hero_speed, on_pause
 
     # jump
     if key == keys.SPACE:
 
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
+
+    if key == keys.P:
+        on_pause = not on_pause
+        

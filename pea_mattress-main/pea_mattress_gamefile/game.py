@@ -17,6 +17,7 @@ NUMBER_OF_BACKGROUND = 2
 GAME_SPEED = 100
 JUMP_SPEED = 200
 
+on_pause = False
 # splash and game over screens
 game_over = Actor("gameover_bg")
 life = Actor("life32", anchor=('center', 'center'))
@@ -108,11 +109,14 @@ def draw_game():
     life.draw()
     screen.draw.text(f"LIVES  {hero_lives}", [630,20], color="pink",fontsize=50)
 
+    if on_pause:
+        screen.draw.text(f"PAUSE",[250,200], color="pink",fontsize=120)
 def update(dt):
-    if endgame:
-        draw_gameover()
-    else:
-        update_game(dt)
+    if not on_pause:
+        if endgame:
+            draw_gameover()
+        else:
+            update_game(dt)
 
 def update_game(dt):
     global endgame
@@ -163,52 +167,10 @@ def update_game(dt):
         y = int(y)                              # needs to be int
         enemy.pos = x, y
 
-        if enemy.colliderect(hero):
-            exit()
-
-    if enemies:
-        if enemies[0].pos[0] <= - 80:
-            enemies.pop(0)
-
-    # hero update
-
-    global hero_speed
-
-    hero_speed -= GRAVITY * dt
-    x, y = hero.pos
-    y -= hero_speed * dt
-
-    if y > GROUND:
-        y = GROUND
-        hero_speed = 0
-
-    hero.pos = x, y
-
-    # bg update
-
-    for bg in backgrounds_bottom:
-        x, y = bg.pos
-        x -= GAME_SPEED * dt
-        bg.pos = x, y
-
-    if backgrounds_bottom[0].pos[0] <= - WIDTH:
-        bg = backgrounds_bottom.pop(0)
-        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
-        backgrounds_bottom.append(bg)
-
-    for bg in backgrounds_top:
-        x, y = bg.pos
-        x -= GAME_SPEED/3 * dt
-        bg.pos = x, y
-
-    if backgrounds_top[0].pos[0] <= - WIDTH:
-        bg = backgrounds_top.pop(0)
-        bg.pos = (NUMBER_OF_BACKGROUND - 1) * WIDTH, 0
-        backgrounds_top.append(bg)
 
 ## controls
 def on_key_down(key):
-    global hero_speed
+    global hero_speed, on_pause
 
     # jump
     if key == keys.SPACE:
@@ -216,9 +178,14 @@ def on_key_down(key):
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
     
-    if key == keys.R and endgame == True:
+    elif key == keys.R and endgame == True:
         reset()
 
+    elif key == keys.P:
+        on_pause = not on_pause
+        
 reset()
 
 pgzrun.go()
+
+        

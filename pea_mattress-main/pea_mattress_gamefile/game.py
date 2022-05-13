@@ -18,12 +18,14 @@ JUMP_SPEED = 200
 
 # splash and game over screens
 game_over = Actor("gameover_bg")
+life = Actor("life32", anchor=('center', 'center'))
+life.pos = (595, 35)
 
 
 
 def draw_gameover():
     global endgame
-    print("gameover!")
+    #print("gameover!")
     endgame = True
     game_over.draw()
     screen.draw.text(str("You lost!"), bottom = HEIGHT -500 , left = WIDTH / 2, fontname = "blueberry")
@@ -42,10 +44,9 @@ def reset():
 
     # game status
     endgame = False
-    life = Actor("life32", anchor=(534, 540))
     hero_lives = 3
 
-    hero = Actor("hero", anchor=('middle', 'bottom'))
+    hero = Actor("princess", anchor=('middle', 'bottom'))
     hero.pos = (64, GROUND)
     hero_speed = 0
 
@@ -92,8 +93,8 @@ def draw_game():
         box.draw()
 
     hero.draw()
-    life.draw())
-    screen.draw.text(f"LIVES    {hero_lives}", [600,20], color="pink",fontsize=60)
+    life.draw()
+    screen.draw.text(f"LIVES  {hero_lives}", [630,20], color="pink",fontsize=50)
 
 def update(dt):
     if endgame:
@@ -178,9 +179,8 @@ def on_key_down(key):
 
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
-
-def on_key_down(key):
-    if key == keys.R:
+    
+    if key == keys.R and endgame == True:
         reset()
 
 reset()

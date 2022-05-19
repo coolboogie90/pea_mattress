@@ -68,7 +68,7 @@ hero_speed = 0
 def reset():
     # game status & initialization
     global endgame, hasnotstarted
-    global hero, hero_speed, hero_lives, life, next_enemy_time, walking_active
+    global hero, hero_speed, hero_lives, life, next_enemy_time, score
     global next_box_time, boxes, enemies
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
     global BOX_APPARTION, ENEMY_APPARTION

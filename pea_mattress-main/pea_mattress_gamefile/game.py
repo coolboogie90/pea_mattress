@@ -4,6 +4,7 @@ from argparse import Action
 from random import randint
 from sre_constants import JUMP
 from tkinter import ANCHOR
+import pygame
 import pgzrun
 
 import math
@@ -29,6 +30,21 @@ start_screen = Actor("startscreen.png")
 life = Actor("life32", anchor=('center', 'center'))
 life.pos = (595, 35)
 
+walking_cycle_images = ["walking_princess_0", "walking_princess_1"]
+walking_active = True
+current_index = 0
+
+jumping_cycle_images = ["jumping_princess_0", "jumping_princess_1"]
+
+def set_index_0():
+    global current_index
+    current_index = 0
+
+def set_index_1():
+    global current_index
+    current_index = 1
+
+
 def draw_splashscreen():
     global hasnotstarted
     hasnotstarted = True
@@ -48,11 +64,11 @@ def draw_gameover():
 hero = Actor("walking_princess.gif", anchor=('middle', 'bottom'))
 hero.pos = (64, GROUND)
 hero_speed = 0
-# okay everything is sound and functional inside of the reset
+
 def reset():
     # game status & initialization
     global endgame, hasnotstarted
-    global hero, hero_speed, hero_lives, life, next_enemy_time
+    global hero, hero_speed, hero_lives, life, next_enemy_time, walking_active
     global next_box_time, boxes, enemies
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
     global BOX_APPARTION, ENEMY_APPARTION
@@ -133,7 +149,7 @@ def update(dt):
             update_game(dt)
 
 def update_game(dt):
-    global endgame
+    global endgame, isJump
     screen.clear()
     # enemies update
     # box
@@ -141,7 +157,7 @@ def update_game(dt):
 
     # hero update
 
-    global hero_speed
+    global hero_speed, current_index
 
     hero_speed -= GRAVITY * dt
     x, y = hero.pos
@@ -150,8 +166,20 @@ def update_game(dt):
     if y > GROUND:
         y = GROUND
         hero_speed = 0
+        isJump = False
 
     hero.pos = x, y
+
+    if current_index == 1:
+        clock.schedule(set_index_0, .2)
+    else:
+        clock.schedule(set_index_1, .2)
+
+    if isJump:
+        hero.image = jumping_cycle_images[current_index]
+    else:
+        hero.image = walking_cycle_images[current_index]
+
 
     # bg update
 
@@ -225,10 +253,9 @@ def on_key_down(key):
 
     # jump
     if key == keys.SPACE and hero_speed == 0:
-        # isJump = True
+        isJump = True
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
-
 
         # else:
         #     hero_speed = hero_speed

@@ -17,12 +17,20 @@ NUMBER_OF_BACKGROUND = 2
 GAME_SPEED = 100
 JUMP_SPEED = 200
 
+# game status
+hasnotstarted = True
 on_pause = False
+
 # splash and game over screens
 game_over = Actor("gameover_bg")
+start_screen = Actor("startscreen.png")
 life = Actor("life32", anchor=('center', 'center'))
 life.pos = (595, 35)
 
+def draw_splashscreen():
+    global hasnotstarted
+    hasnotstarted = True
+    start_screen.draw()
 
 
 def draw_gameover():

@@ -95,6 +95,8 @@ def draw():
     
     if endgame == True:
         draw_gameover()
+    elif hasnotstarted == True:
+        draw_splashscreen()
     else:
         draw_game()
 
@@ -228,6 +230,9 @@ def on_key_down(key):
 
     elif key == keys.P:
         on_pause = not on_pause
+    
+    elif key == keys.S and hasnotstarted == True:
+        reset()
         
 reset()
 

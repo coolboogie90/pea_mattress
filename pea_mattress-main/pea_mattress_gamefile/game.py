@@ -2,6 +2,7 @@
 
 from argparse import Action
 from random import randint
+from sre_constants import JUMP
 from tkinter import ANCHOR
 import pgzrun
 
@@ -208,13 +209,15 @@ def update_game(dt):
 
 ## controls
 def on_key_down(key):
-    global hero_speed, on_pause, isJump
+    global hero_speed, hero, on_pause, isJump
 
     # jump
-    if key == keys.SPACE:
+    if key == keys.SPACE and hero_speed == 0:
         # isJump = True
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
+
+
         # else:
         #     hero_speed = hero_speed
         #     isJump = False

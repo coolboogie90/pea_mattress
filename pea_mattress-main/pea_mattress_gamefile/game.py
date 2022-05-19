@@ -57,7 +57,6 @@ def reset():
 
     # game status
     endgame = False
-    hasnotstarted = False
     hero_lives = 3
 
     hero = Actor("princess", anchor=('middle', 'bottom'))
@@ -93,7 +92,7 @@ def reset():
 
 def draw():
     global endgame
-    
+
     if endgame == True:
         draw_gameover()
     elif hasnotstarted == True:
@@ -220,7 +219,7 @@ def update_game(dt):
 
 ## controls
 def on_key_down(key):
-    global hero_speed, on_pause
+    global hero_speed, on_pause, hasnotstarted
 
     # jump
     if key == keys.SPACE:
@@ -236,6 +235,7 @@ def on_key_down(key):
     
     elif key == keys.S and hasnotstarted == True:
         reset()
+        hasnotstarted = False
         
 reset()
 

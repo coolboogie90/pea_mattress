@@ -229,8 +229,12 @@ def update_game(dt):
             boxes.pop(0)
 
     global next_enemy_time
+    global amplitude
+
+    amplitude = 200
 
     next_enemy_time -= dt
+
     if next_enemy_time <= 0:
         enemy = Actor("pea_enemy", anchor=('left', 'bottom'))
         enemy.pos = WIDTH, GROUND
@@ -240,8 +244,8 @@ def update_game(dt):
     for enemy in enemies:
         x, y = enemy.pos
         x -= GAME_SPEED * dt
-        y = math.sin(x/50.0) * 50 + 300        # scale sine wave
-        y = int(y)                              # needs to be int
+        y = math.sin(x/92 + 17.5) * amplitude + 300        # scale sine wave
+        y = int(y)                            # needs to be int
         enemy.pos = x, y
         if enemy.colliderect(hero):
             enemies.pop(0)

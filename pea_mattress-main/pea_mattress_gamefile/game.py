@@ -108,10 +108,10 @@ def draw_game():
 
     hero.draw()
     life.draw()
-    screen.draw.text(f"LIVES  {hero_lives}", [630,20], color="pink",fontsize=50)
+    screen.draw.text(f"LIVES {hero_lives}", [630,20], color="pink", owidth=1, ocolor="black", fontsize=50, fontname = "quitemagical")
 
     if on_pause:
-        screen.draw.text(f"PAUSE",[250,200], color="pink",fontsize=120)
+        screen.draw.text(f"PAUSE",[250,200], color="pink", owidth=1, ocolor="black", fontsize=120, fontname = "blueberry")
 
 def update(dt):
     if not on_pause:

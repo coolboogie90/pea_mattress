@@ -49,7 +49,7 @@ hero_speed = 0
 # okay everything is sound and functional inside of the reset
 def reset():
     # game status & initialization
-    global endgame
+    global endgame, hasnotstarted
     global hero, hero_speed, hero_lives, life, next_enemy_time
     global next_box_time, boxes, enemies
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
@@ -57,6 +57,7 @@ def reset():
 
     # game status
     endgame = False
+    hasnotstarted = False
     hero_lives = 3
 
     hero = Actor("princess", anchor=('middle', 'bottom'))

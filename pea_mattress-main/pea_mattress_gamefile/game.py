@@ -164,7 +164,7 @@ def update_game(dt):
 
     next_box_time -= dt
     if next_box_time <= 0:
-        box = Actor("box", anchor=('left', 'bottom'))
+        box = Actor("pillow", anchor=('left', 'bottom'))
         box.pos = WIDTH, GROUND
         boxes.append(box)
         next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])

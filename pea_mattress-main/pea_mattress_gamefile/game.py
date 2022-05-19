@@ -27,7 +27,7 @@ on_pause = False
 game_over = Actor("gameover_bg")
 start_screen = Actor("startscreen.png")
 life = Actor("life32", anchor=('center', 'center'))
-life.pos = (595, 35)
+life.pos = (765, 40)
 
 def draw_splashscreen():
     global hasnotstarted
@@ -52,7 +52,7 @@ hero_speed = 0
 def reset():
     # game status & initialization
     global endgame, hasnotstarted
-    global hero, hero_speed, hero_lives, life, next_enemy_time
+    global hero, hero_speed, hero_lives, life, next_enemy_time, score
     global next_box_time, boxes, enemies
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
     global BOX_APPARTION, ENEMY_APPARTION
@@ -60,6 +60,7 @@ def reset():
     # game status
     endgame = False
     hero_lives = 3
+    score = 0
 
     hero = Actor("princess", anchor=('middle', 'bottom'))
     hero.pos = (64, GROUND)
@@ -70,7 +71,7 @@ def reset():
     next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
     enemies = []
 
-# background inititalisation
+    # background inititalisation
 
     BOX_APPARTION = (2, 5)
     next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
@@ -118,7 +119,9 @@ def draw_game():
 
     hero.draw()
     life.draw()
-    screen.draw.text(f"LIVES {hero_lives}", [630,20], color="pink", owidth=1, ocolor="black", fontsize=50, fontname = "quitemagical")
+    screen.draw.text(f"LIVES {hero_lives}", [600,20], color="pink", owidth=1, ocolor="black", fontsize=50, fontname = "quitemagical")
+    screen.draw.text(f"SCORE  {score}", [10,20], color="pink", owidth=1, ocolor="black", fontsize=50, fontname = "quitemagical")
+
 
     if on_pause:
         screen.draw.text(f"PAUSE",[250,200], color="pink", owidth=1, ocolor="black", fontsize=120, fontname = "blueberry")
@@ -137,7 +140,7 @@ def update_game(dt):
     screen.clear()
     # enemies update
     # box
-    global next_box_time, game_over, hero_lives
+    global next_box_time, game_over, hero_lives, score
 
     # hero update
 
@@ -189,10 +192,12 @@ def update_game(dt):
         box.pos = x, y
         if box.colliderect(hero):
             boxes.pop(0)
+            score = score
             hero_lives -= 1
 
     if boxes:
         if boxes[0].pos[0] <= - 32:
+            score += 10
             boxes.pop(0)
 
     global next_enemy_time
@@ -207,12 +212,18 @@ def update_game(dt):
     for enemy in enemies:
         x, y = enemy.pos
         x -= GAME_SPEED * dt
-        y = math.sin(x/50.0) * 100 + 200        # scale sine wave
+        y = math.sin(x/50.0) * 50 + 300        # scale sine wave
         y = int(y)                              # needs to be int
         enemy.pos = x, y
         if enemy.colliderect(hero):
             enemies.pop(0)
+            score = score
             hero_lives -= 1
+    
+    if enemies:
+        if enemies[0].pos[0] <= - 32:
+            score += 10
+            enemies.pop(0)
 
     if hero_lives == 0:
         endgame = True 

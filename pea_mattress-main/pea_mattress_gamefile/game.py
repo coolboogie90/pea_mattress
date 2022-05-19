@@ -16,6 +16,7 @@ GRAVITY = 200
 NUMBER_OF_BACKGROUND = 2
 GAME_SPEED = 100
 JUMP_SPEED = 200
+isJump = False
 
 # game status
 hasnotstarted = True
@@ -87,7 +88,6 @@ def reset():
         bg_t = Actor("background1_peamattress", anchor=('left', 'top'))
         bg_t.pos = n * WIDTH, 0
         backgrounds_top.append(bg_t)
-
 
 
 def draw():
@@ -190,11 +190,6 @@ def update_game(dt):
             boxes.pop(0)
             hero_lives -= 1
 
-    if hero_lives == 0:
-        endgame = True
-        screen.clear()
-        draw_gameover()
-
     if boxes:
         if boxes[0].pos[0] <= - 32:
             boxes.pop(0)
@@ -207,25 +202,34 @@ def update_game(dt):
         enemy.pos = WIDTH, GROUND
         enemies.append(enemy)
         next_enemy_time = randint(ENEMY_APPARTION[0], ENEMY_APPARTION[1])
-    
-    
+        
     for enemy in enemies:
         x, y = enemy.pos
         x -= GAME_SPEED * dt
         y = math.sin(x/50.0) * 100 + 200        # scale sine wave
         y = int(y)                              # needs to be int
         enemy.pos = x, y
+        if enemy.colliderect(hero):
+            enemies.pop(0)
+            hero_lives -= 1
 
+    if hero_lives == 0:
+        endgame = True 
+        screen.clear()
+        draw_gameover()
 
 ## controls
 def on_key_down(key):
-    global hero_speed, on_pause, hasnotstarted
+    global hero_speed, on_pause, hasnotstarted, isJump
 
     # jump
     if key == keys.SPACE:
-
+        # isJump = True
         if hero_speed <= 0:
             hero_speed = JUMP_SPEED
+        # else:
+        #     hero_speed = hero_speed
+        #     isJump = False
     
     elif key == keys.R and endgame == True:
         reset()

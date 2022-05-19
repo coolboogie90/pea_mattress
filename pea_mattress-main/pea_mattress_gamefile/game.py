@@ -127,6 +127,8 @@ def update(dt):
     if not on_pause:
         if endgame:
             draw_gameover()
+        elif hasnotstarted:
+            draw_splashscreen()
         else:
             update_game(dt)
 

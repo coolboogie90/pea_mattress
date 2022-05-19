@@ -19,12 +19,20 @@ GAME_SPEED = 100
 JUMP_SPEED = 200
 isJump = False
 
+# game status
+hasnotstarted = True
 on_pause = False
+
 # splash and game over screens
 game_over = Actor("gameover_bg")
+start_screen = Actor("startscreen.png")
 life = Actor("life32", anchor=('center', 'center'))
 life.pos = (595, 35)
 
+def draw_splashscreen():
+    global hasnotstarted
+    hasnotstarted = True
+    start_screen.draw()
 
 
 def draw_gameover():
@@ -43,7 +51,7 @@ hero_speed = 0
 # okay everything is sound and functional inside of the reset
 def reset():
     # game status & initialization
-    global endgame
+    global endgame, hasnotstarted
     global hero, hero_speed, hero_lives, life, next_enemy_time
     global next_box_time, boxes, enemies
     global backgrounds_bottom, backgrounds_top, NUMBER_OF_BACKGROUND
@@ -85,9 +93,11 @@ def reset():
 
 def draw():
     global endgame
-    
+
     if endgame == True:
         draw_gameover()
+    elif hasnotstarted == True:
+        draw_splashscreen()
     else:
         draw_game()
 
@@ -117,6 +127,8 @@ def update(dt):
     if not on_pause:
         if endgame:
             draw_gameover()
+        elif hasnotstarted:
+            draw_splashscreen()
         else:
             update_game(dt)
 
@@ -165,7 +177,7 @@ def update_game(dt):
 
     next_box_time -= dt
     if next_box_time <= 0:
-        box = Actor("box", anchor=('left', 'bottom'))
+        box = Actor("pillow", anchor=('left', 'bottom'))
         box.pos = WIDTH, GROUND
         boxes.append(box)
         next_box_time = randint(BOX_APPARTION[0], BOX_APPARTION[1])
@@ -209,7 +221,7 @@ def update_game(dt):
 
 ## controls
 def on_key_down(key):
-    global hero_speed, hero, on_pause, isJump
+    global hero_speed, on_pause, hasnotstarted, isJump
 
     # jump
     if key == keys.SPACE and hero_speed == 0:
@@ -227,6 +239,10 @@ def on_key_down(key):
 
     elif key == keys.P:
         on_pause = not on_pause
+    
+    elif key == keys.S and hasnotstarted == True:
+        reset()
+        hasnotstarted = False
         
 reset()
 

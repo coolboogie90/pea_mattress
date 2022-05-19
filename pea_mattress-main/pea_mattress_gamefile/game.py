@@ -45,7 +45,7 @@ def draw_gameover():
 
 # hero initialisation
 
-hero = Actor("princess", anchor=('middle', 'bottom'))
+hero = Actor("walking_princess.gif", anchor=('middle', 'bottom'))
 hero.pos = (64, GROUND)
 hero_speed = 0
 # okay everything is sound and functional inside of the reset
@@ -61,7 +61,7 @@ def reset():
     endgame = False
     hero_lives = 3
 
-    hero = Actor("princess", anchor=('middle', 'bottom'))
+    hero = Actor("walking_princess.gif", anchor=('middle', 'bottom'))
     hero.pos = (64, GROUND)
     hero_speed = 0
 
